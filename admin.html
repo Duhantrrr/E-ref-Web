@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eşref Usta | Yönetim</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Montserrat', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
+        .admin-box { max-width: 500px; margin: 20px auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; margin-bottom: 20px; }
+        input, select { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; font-size: 14px; }
+        .btn-add { width: 100%; padding: 16px; border: none; border-radius: 12px; background: #e67e22; color: white; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
+        .btn-add:disabled { background: #ccc; }
+        .item-list { margin-top: 30px; }
+        .item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #eee; background: #fafafa; border-radius: 10px; margin-bottom: 8px; }
+        .btn-del { background: #ff4757; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; }
+        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f0f2f5; z-index: 10000; display: flex; justify-content: center; align-items: center; }
+    </style>
+</head>
+<body>
+
+    <!-- GİZLİ GİRİŞ -->
+    <div id="loginOverlay">
+        <div class="admin-box">
+            <h2>Eşref Usta Panel</h2>
+            <input type="password" id="passInput" placeholder="Şifreyi Girin">
+            <button class="btn-add" onclick="checkPass()">Giriş Yap</button>
+        </div>
+    </div>
+
+    <!-- ÜRÜN EKLEME -->
+    <div class="admin-box">
+        <h2>Yeni Ürün / Güncelle</h2>
+        <input type="text" id="pName" placeholder="Ürün Adı (Dondurma Top vb.)">
+        <input type="number" id="pPrice" placeholder="Fiyat (₺)">
+        <select id="pCat">
+            <option value="Dondurma">Dondurma</option>
+            <option value="Çiğköfte">Çiğköfte</option>
+            <option value="Tostlar">Tostlar</option>
+            <option value="Tatlılar">Tatlılar</option>
+            <option value="İçecekler">İçecekler</option>
+        </select>
+        <p style="font-size:12px; color:#666; margin-top:10px;">Ürün Görseli (Galeriden/Kameradan):</p>
+        <input type="file" id="pFile" accept="image/*">
+        <button class="btn-add" id="saveBtn" onclick="save()">Kaydet ve API'ye Yükle</button>
+    </div>
+
+    <!-- LİSTELEME -->
+    <div class="admin-box">
+        <h3>Mevcut Ürünler</h3>
+        <div class="item-list" id="adminList">Yükleniyor...</div>
+    </div>
+
+    <script>
+        const BASE_URL = "https://e-ref-api.onrender.com"; 
+        const PASS = "DuhanTural24";
+
+        function checkPass() {
+            if(document.getElementById('passInput').value === PASS) {
+                document.getElementById('loginOverlay').style.display = 'none';
+                fetchList();
+            } else { alert("Şifre Yanlış!"); }
+        }
+
+        async function fetchList() {
+            const res = await fetch(`${BASE_URL}/api/urunler`);
+            const data = await res.json();
+            const list = document.getElementById('adminList');
+            list.innerHTML = '';
+            data.forEach(i => {
+                list.innerHTML += `
+                <div class="item">
+                    <span>${i.ad} - <b>${i.fiyat}₺</b></span>
+                    <button class="btn-del" onclick="del('${i.id}')"><i class="fa fa-trash"></i></button>
+                </div>`;
+            });
+        }
+
+        async function save() {
+            const btn = document.getElementById('saveBtn');
+            const fileInput = document.getElementById('pFile');
+            const ad = document.getElementById('pName').value;
+            const fiyat = document.getElementById('pPrice').value;
+            const kategori = document.getElementById('pCat').value;
+
+            if(!ad || !fiyat) return alert("Lütfen ad ve fiyat girin!");
+
+            btn.disabled = true;
+            btn.innerText = "Yükleniyor (ImgBB)...";
+
+            const formData = new FormData();
+            formData.append('ad', ad);
+            formData.append('fiyat', fiyat);
+            formData.append('kategori', kategori);
+            formData.append('sifre', PASS);
+            if(fileInput.files[0]) formData.append('gorsel', fileInput.files[0]);
+
+            try {
+                const res = await fetch(`${BASE_URL}/api/urunler`, { method: 'POST', body: formData });
+                if(res.ok) {
+                    alert("Ürün Başarıyla API'ye Eklendi!");
+                    document.getElementById('pName').value = "";
+                    document.getElementById('pPrice').value = "";
+                    fileInput.value = "";
+                    fetchList();
+                }
+            } catch (err) { alert("Yükleme başarısız!"); }
+            
+            btn.disabled = false;
+            btn.innerText = "Kaydet ve API'ye Yükle";
+        }
+
+        async function del(id) {
+            if(confirm("Bu ürünü API'den silmek istediğine emin misin?")) {
+                await fetch(`${BASE_URL}/api/urunler/${id}`, { method: 'DELETE' });
+                fetchList();
+            }
+        }
+    </script>
+</body>
+</html>
