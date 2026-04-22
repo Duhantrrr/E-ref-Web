@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eşref Usta | QR Menü</title>
+    <title>Eşref Usta | Premium QR Menü</title>
+    <!-- Fontlar ve İkonlar -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -46,7 +47,9 @@
         .info small { color: var(--p); font-weight: 600; text-transform: uppercase; font-size: 11px; }
         .price { font-weight: 800; color: #27ae60; font-size: 20px; }
 
-        footer { text-align: center; padding: 40px; opacity: 0.5; font-size: 12px; }
+        footer { text-align: center; padding: 40px; }
+        .lock-btn { color: #eee; text-decoration: none; font-size: 18px; transition: 0.3s; }
+        .lock-btn:hover { color: var(--p); }
     </style>
 </head>
 <body>
@@ -61,10 +64,12 @@
     </div>
 
     <div class="container" id="menuArea">
-        <p style="text-align:center; margin-top:50px;">Menü hazırlanıyor...</p>
+        <p style="text-align:center; margin-top:50px;">Lezzetler yükleniyor...</p>
     </div>
 
-    <footer>© 2024 Eşref Usta Dondurma</footer>
+    <footer>
+        <a href="admin.html" class="lock-btn"><i class="fa-solid fa-lock"></i></a>
+    </footer>
 
     <script>
         const BASE_URL = "https://e-ref-api.onrender.com"; 
@@ -77,7 +82,7 @@
                 renderMenu('Tümü');
                 renderCats();
             } catch (err) {
-                document.getElementById('menuArea').innerHTML = "API'ye ulaşılamıyor. Lütfen bekleyin...";
+                document.getElementById('menuArea').innerHTML = "<p style='text-align:center;'>API Bağlantı Hatası!</p>";
             }
         }
 
@@ -86,12 +91,12 @@
             area.innerHTML = '';
             const filtered = cat === 'Tümü' ? menuData : menuData.filter(i => i.kategori === cat);
             
-            if(filtered.length === 0) area.innerHTML = "<p style='text-align:center;'>Bu kategoride ürün bulunmuyor.</p>";
+            if(filtered.length === 0) area.innerHTML = "<p style='text-align:center;'>Bu kategoride henüz ürün yok.</p>";
 
             filtered.forEach(i => {
                 area.innerHTML += `
                 <div class="card">
-                    <img src="${i.img}" onerror="this.src='https://via.placeholder.com/150?text=Esref+Usta'">
+                    <img src="${i.img}" onerror="this.src='https://via.placeholder.com/150?text=Lezzet'">
                     <div class="info">
                         <small>${i.kategori}</small>
                         <h3>${i.ad}</h3>
