@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eşref Usta | Yönetim</title>
+    <title>Eşref Usta | Admin Panel</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { font-family: 'Montserrat', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
         .admin-box { max-width: 500px; margin: 20px auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #333; margin-bottom: 20px; }
-        input, select { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; font-size: 14px; }
+        input, select { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; font-size: 14px; outline: none; }
+        input:focus { border-color: #e67e22; }
         .btn-add { width: 100%; padding: 16px; border: none; border-radius: 12px; background: #e67e22; color: white; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
-        .btn-add:disabled { background: #ccc; }
+        .btn-add:disabled { background: #ccc; cursor: not-allowed; }
         .item-list { margin-top: 30px; }
         .item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #eee; background: #fafafa; border-radius: 10px; margin-bottom: 8px; }
         .btn-del { background: #ff4757; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; }
@@ -24,16 +25,16 @@
     <!-- GİZLİ GİRİŞ -->
     <div id="loginOverlay">
         <div class="admin-box">
-            <h2>Eşref Usta Panel</h2>
-            <input type="password" id="passInput" placeholder="Şifreyi Girin">
+            <h2>Eşref Usta Admin</h2>
+            <input type="password" id="passInput" placeholder="Şifreniz">
             <button class="btn-add" onclick="checkPass()">Giriş Yap</button>
         </div>
     </div>
 
-    <!-- ÜRÜN EKLEME -->
+    <!-- ÜRÜN YÖNETİMİ -->
     <div class="admin-box">
-        <h2>Yeni Ürün / Güncelle</h2>
-        <input type="text" id="pName" placeholder="Ürün Adı (Dondurma Top vb.)">
+        <h2>Ürün Ekle / Güncelle</h2>
+        <input type="text" id="pName" placeholder="Ürün Adı">
         <input type="number" id="pPrice" placeholder="Fiyat (₺)">
         <select id="pCat">
             <option value="Dondurma">Dondurma</option>
@@ -42,12 +43,11 @@
             <option value="Tatlılar">Tatlılar</option>
             <option value="İçecekler">İçecekler</option>
         </select>
-        <p style="font-size:12px; color:#666; margin-top:10px;">Ürün Görseli (Galeriden/Kameradan):</p>
+        <p style="font-size:12px; color:#666; margin-top:10px;">Ürün Görseli Seç (Galeriden):</p>
         <input type="file" id="pFile" accept="image/*">
         <button class="btn-add" id="saveBtn" onclick="save()">Kaydet ve API'ye Yükle</button>
     </div>
 
-    <!-- LİSTELEME -->
     <div class="admin-box">
         <h3>Mevcut Ürünler</h3>
         <div class="item-list" id="adminList">Yükleniyor...</div>
@@ -73,7 +73,7 @@
                 list.innerHTML += `
                 <div class="item">
                     <span>${i.ad} - <b>${i.fiyat}₺</b></span>
-                    <button class="btn-del" onclick="del('${i.id}')"><i class="fa fa-trash"></i></button>
+                    <button class="btn-del" onclick="del('${i._id}')"><i class="fa-solid fa-trash"></i></button>
                 </div>`;
             });
         }
@@ -85,7 +85,7 @@
             const fiyat = document.getElementById('pPrice').value;
             const kategori = document.getElementById('pCat').value;
 
-            if(!ad || !fiyat) return alert("Lütfen ad ve fiyat girin!");
+            if(!ad || !fiyat) return alert("Ad ve fiyat yazmalısın!");
 
             btn.disabled = true;
             btn.innerText = "Yükleniyor (ImgBB)...";
@@ -98,22 +98,25 @@
             if(fileInput.files[0]) formData.append('gorsel', fileInput.files[0]);
 
             try {
-                const res = await fetch(`${BASE_URL}/api/urunler`, { method: 'POST', body: formData });
+                const res = await fetch(`${BASE_URL}/api/urunler`, { 
+                    method: 'POST', 
+                    body: formData 
+                });
                 if(res.ok) {
-                    alert("Ürün Başarıyla API'ye Eklendi!");
+                    alert("Başarılı!");
                     document.getElementById('pName').value = "";
                     document.getElementById('pPrice').value = "";
                     fileInput.value = "";
                     fetchList();
                 }
-            } catch (err) { alert("Yükleme başarısız!"); }
+            } catch (err) { alert("Hata oluştu!"); }
             
             btn.disabled = false;
             btn.innerText = "Kaydet ve API'ye Yükle";
         }
 
         async function del(id) {
-            if(confirm("Bu ürünü API'den silmek istediğine emin misin?")) {
+            if(confirm("Bu ürünü silmek istediğine emin misin?")) {
                 await fetch(`${BASE_URL}/api/urunler/${id}`, { method: 'DELETE' });
                 fetchList();
             }
