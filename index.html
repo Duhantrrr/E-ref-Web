@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eşref Usta | Premium QR Menü</title>
-    <!-- Fontlar ve İkonlar -->
+    <title>Eşref Usta | QR Menü</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -64,7 +63,7 @@
     </div>
 
     <div class="container" id="menuArea">
-        <p style="text-align:center; margin-top:50px;">Lezzetler yükleniyor...</p>
+        <p style="text-align:center; margin-top:50px;">Lezzetler hazırlanıyor...</p>
     </div>
 
     <footer>
@@ -82,7 +81,7 @@
                 renderMenu('Tümü');
                 renderCats();
             } catch (err) {
-                document.getElementById('menuArea').innerHTML = "<p style='text-align:center;'>API Bağlantı Hatası!</p>";
+                document.getElementById('menuArea').innerHTML = "<p style='text-align:center;'>Sunucuya bağlanılamadı. API'nin uyanması 30sn sürebilir...</p>";
             }
         }
 
@@ -94,14 +93,15 @@
             if(filtered.length === 0) area.innerHTML = "<p style='text-align:center;'>Bu kategoride henüz ürün yok.</p>";
 
             filtered.forEach(i => {
+                const imgSource = i.img || "https://via.placeholder.com/150?text=Esref+Usta";
                 area.innerHTML += `
                 <div class="card">
-                    <img src="${i.img}" onerror="this.src='https://via.placeholder.com/150?text=Lezzet'">
+                    <img src="${imgSource}" onerror="this.src='https://via.placeholder.com/150?text=Lezzet'">
                     <div class="info">
-                        <small>${i.kategori}</small>
-                        <h3>${i.ad}</h3>
+                        <small>${i.kategori || "Genel"}</small>
+                        <h3>${i.ad || "İsimsiz Ürün"}</h3>
                     </div>
-                    <div class="price">${i.fiyat} ₺</div>
+                    <div class="price">${i.fiyat || "0"} ₺</div>
                 </div>`;
             });
         }
