@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eşref Usta | Admin Panel</title>
+    <title>Eşref Usta | Yönetim</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -11,7 +11,6 @@
         .admin-box { max-width: 500px; margin: 20px auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #333; margin-bottom: 20px; }
         input, select { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; font-size: 14px; outline: none; }
-        input:focus { border-color: #e67e22; }
         .btn-add { width: 100%; padding: 16px; border: none; border-radius: 12px; background: #e67e22; color: white; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
         .btn-add:disabled { background: #ccc; cursor: not-allowed; }
         .item-list { margin-top: 30px; }
@@ -22,18 +21,18 @@
 </head>
 <body>
 
-    <!-- GİZLİ GİRİŞ -->
+    <!-- ŞİFRE GİRİŞİ -->
     <div id="loginOverlay">
         <div class="admin-box">
-            <h2>Eşref Usta Admin</h2>
-            <input type="password" id="passInput" placeholder="Şifreniz">
+            <h2>Eşref Usta Yönetim</h2>
+            <input type="password" id="passInput" placeholder="Yönetici Şifresi">
             <button class="btn-add" onclick="checkPass()">Giriş Yap</button>
         </div>
     </div>
 
     <!-- ÜRÜN YÖNETİMİ -->
     <div class="admin-box">
-        <h2>Ürün Ekle / Güncelle</h2>
+        <h2>Yeni Ürün Ekle</h2>
         <input type="text" id="pName" placeholder="Ürün Adı">
         <input type="number" id="pPrice" placeholder="Fiyat (₺)">
         <select id="pCat">
@@ -49,7 +48,7 @@
     </div>
 
     <div class="admin-box">
-        <h3>Mevcut Ürünler</h3>
+        <h3>Kayıtlı Ürünler</h3>
         <div class="item-list" id="adminList">Yükleniyor...</div>
     </div>
 
@@ -61,7 +60,7 @@
             if(document.getElementById('passInput').value === PASS) {
                 document.getElementById('loginOverlay').style.display = 'none';
                 fetchList();
-            } else { alert("Şifre Yanlış!"); }
+            } else { alert("Yanlış Şifre!"); }
         }
 
         async function fetchList() {
@@ -85,10 +84,10 @@
             const fiyat = document.getElementById('pPrice').value;
             const kategori = document.getElementById('pCat').value;
 
-            if(!ad || !fiyat) return alert("Ad ve fiyat yazmalısın!");
+            if(!ad || !fiyat) return alert("Ad ve fiyat alanları boş olamaz!");
 
             btn.disabled = true;
-            btn.innerText = "Yükleniyor (ImgBB)...";
+            btn.innerText = "Resim ImgBB'ye yükleniyor...";
 
             const formData = new FormData();
             formData.append('ad', ad);
@@ -98,10 +97,7 @@
             if(fileInput.files[0]) formData.append('gorsel', fileInput.files[0]);
 
             try {
-                const res = await fetch(`${BASE_URL}/api/urunler`, { 
-                    method: 'POST', 
-                    body: formData 
-                });
+                const res = await fetch(`${BASE_URL}/api/urunler`, { method: 'POST', body: formData });
                 if(res.ok) {
                     alert("Başarılı!");
                     document.getElementById('pName').value = "";
@@ -109,14 +105,14 @@
                     fileInput.value = "";
                     fetchList();
                 }
-            } catch (err) { alert("Hata oluştu!"); }
+            } catch (err) { alert("Bağlantı hatası!"); }
             
             btn.disabled = false;
             btn.innerText = "Kaydet ve API'ye Yükle";
         }
 
         async function del(id) {
-            if(confirm("Bu ürünü silmek istediğine emin misin?")) {
+            if(confirm("Bu ürünü tamamen silmek istediğine emin misin?")) {
                 await fetch(`${BASE_URL}/api/urunler/${id}`, { method: 'DELETE' });
                 fetchList();
             }
