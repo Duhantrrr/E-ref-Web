@@ -12,13 +12,41 @@
         
         /* ÜST BANNER */
         .hero { 
-            height: 250px; 
+            height: 200px; 
             background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1501443762994-82bd5dace89a?w=1000'); 
             background-size: cover; background-position: center; 
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            color: #fff; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
+            color: #fff; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; 
         }
-        .hero h1 { font-family: 'Playfair Display', serif; font-size: 42px; margin: 0; }
+        .hero h1 { font-family: 'Playfair Display', serif; font-size: 38px; margin: 0; }
+
+        /* BELİRGİN DÜKKAN BİLGİ BUTONU */
+        .info-bar {
+            background: white; 
+            margin: -35px 25px 15px; 
+            padding: 18px; 
+            border-radius: 25px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            box-shadow: 0 15px 30px rgba(230, 126, 34, 0.2); 
+            cursor: pointer; 
+            position: relative; 
+            z-index: 10;
+            border: 2px solid var(--p); 
+            animation: pulse-border 2s infinite; 
+        }
+        
+        @keyframes pulse-border {
+            0% { transform: scale(1); box-shadow: 0 10px 20px rgba(230, 126, 34, 0.2); }
+            50% { transform: scale(1.03); box-shadow: 0 15px 35px rgba(230, 126, 34, 0.4); }
+            100% { transform: scale(1); box-shadow: 0 10px 20px rgba(230, 126, 34, 0.2); }
+        }
+
+        .info-bar div { display: flex; align-items: center; }
+        .info-bar i { color: var(--p); margin-right: 12px; font-size: 22px; }
+        .info-bar span { font-weight: 700; font-size: 15px; color: #333; }
+        .info-bar .arrow { color: #ccc; font-size: 14px; }
 
         /* KATEGORİLER */
         .categories { display: flex; gap: 10px; padding: 20px; overflow-x: auto; position: sticky; top: 0; background: var(--bg); z-index: 100; scrollbar-width: none; }
@@ -33,17 +61,24 @@
         .price { font-weight: 800; color: #27ae60; font-size: 19px; }
 
         /* ÇEŞİTLER BUTONU */
-        .flavor-link { color: var(--p); font-size: 12px; font-weight: 700; text-decoration: none; display: inline-block; margin-top: 5px; cursor: pointer; border: 1px solid var(--p); padding: 4px 10px; border-radius: 20px; transition: 0.3s; }
-        .flavor-link:hover { background: var(--p); color: white; }
+        .flavor-link { color: var(--p); font-size: 11px; font-weight: 700; text-decoration: none; display: inline-block; margin-top: 5px; cursor: pointer; border: 1px solid var(--p); padding: 3px 8px; border-radius: 15px; }
 
-        /* MODAL (KART AÇILIŞI) */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
-        .modal-card { background: white; width: 100%; max-width: 450px; max-height: 80vh; border-radius: 30px; padding: 25px; overflow-y: auto; position: relative; }
-        .close-modal { position: absolute; top: 15px; right: 15px; font-size: 24px; color: #333; cursor: pointer; }
-        .modal-title { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--p); margin-bottom: 20px; text-align: center; border-bottom: 2px solid #f8f8f8; padding-bottom: 10px; }
+        /* MODAL TASARIMI */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; backdrop-filter: blur(8px); }
+        .modal-card { background: white; width: 100%; max-width: 400px; border-radius: 35px; padding: 30px; position: relative; animation: popUp 0.3s ease; }
+        @keyframes popUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .close-modal { position: absolute; top: 20px; right: 20px; font-size: 28px; color: #333; cursor: pointer; }
+        .modal-title { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--p); margin-bottom: 20px; text-align: center; border-bottom: 1px solid #eee; padding-bottom: 15px; }
         
-        .flavor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .flavor-item { background: #fef9f5; padding: 10px; border-radius: 12px; font-size: 13px; font-weight: 600; color: #555; display: flex; align-items: center; gap: 8px; border-left: 4px solid var(--p); }
+        .grid-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .grid-item { background: #fffcf9; padding: 10px; border-radius: 12px; font-size: 13px; font-weight: 600; color: #444; border-left: 3px solid var(--p); }
+
+        /* BİLGİ DETAYLARI */
+        .info-content { text-align: center; }
+        .info-row { margin-bottom: 25px; background: #fef9f5; padding: 15px; border-radius: 20px; }
+        .info-row i { font-size: 24px; color: var(--p); margin-bottom: 8px; display: block; }
+        .info-row strong { display: block; font-size: 18px; color: #333; margin-top: 5px; }
+        .info-row small { color: #999; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; }
 
         footer { text-align: center; padding: 40px; }
     </style>
@@ -52,38 +87,66 @@
 
     <div class="hero">
         <h1>Eşref Usta</h1>
-        <p>GELENEKSEL LEZZETLER</p>
+    </div>
+
+    <!-- DÜKKAN BİLGİ BARI -->
+    <div class="info-bar" onclick="openInfo()">
+        <div>
+            <i class="fa-solid fa-wifi"></i>
+            <span>WiFi & Dükkan Bilgisi</span>
+        </div>
+        <div class="arrow">
+            <i class="fa-solid fa-chevron-right"></i>
+        </div>
     </div>
 
     <div class="categories" id="catBar"></div>
     <div class="container" id="menuArea"></div>
 
-    <!-- DONDURMA ÇEŞİTLERİ KARTI (MODAL) -->
-    <div class="modal" id="flavorModal" onclick="closeFlavors(event)">
+    <!-- 1. MODAL: DÜKKAN BİLGİLERİ -->
+    <div class="modal" id="infoModal" onclick="closeModals()">
         <div class="modal-card" onclick="event.stopPropagation()">
-            <i class="fa-solid fa-xmark close-modal" onclick="document.getElementById('flavorModal').style.display='none'"></i>
-            <div class="modal-title">Dondurma Çeşitlerimiz</div>
-            <div class="flavor-grid" id="flavorList">
-                <!-- Çeşitler JS ile dolacak -->
+            <span class="close-modal" onclick="closeModals()">&times;</span>
+            <div class="modal-title">Hoş Geldiniz</div>
+            
+            <div class="info-content">
+                <div class="info-row">
+                    <i class="fa-solid fa-clock"></i>
+                    <small>Çalışma Saatleri</small>
+                    <strong>Her Gün: 10:00 - 00:00</strong>
+                </div>
+                
+                <div class="info-row">
+                    <i class="fa-solid fa-wifi"></i>
+                    <small>Müşteri WiFi Şifresi</small>
+                    <strong style="user-select: all;">DondurmaEvi24.</strong>
+                </div>
             </div>
+
+            <button onclick="closeModals()" style="width:100%; padding:15px; border:none; background:var(--p); color:white; border-radius:20px; font-weight:700; font-size:16px; margin-top:10px; cursor:pointer;">Anladım</button>
+        </div>
+    </div>
+
+    <!-- 2. MODAL: LEZZET ÇEŞİTLERİ -->
+    <div class="modal" id="flavorModal" onclick="closeModals()">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="closeModals()">&times;</span>
+            <div class="modal-title" id="flavorTitle">Çeşitlerimiz</div>
+            <div class="grid-list" id="flavorList"></div>
         </div>
     </div>
 
     <footer>
-        <a href="admin.html" style="color:#eee;"><i class="fa-solid fa-lock"></i></a>
+        <a href="admin.html" style="color:#eee; opacity: 0.5;"><i class="fa-solid fa-lock"></i></a>
+        <p style="opacity: 0.3; font-size: 11px; margin-top: 10px;">© 2026 Eşref Usta Dondurma</p>
     </footer>
 
     <script>
         const BASE_URL = "https://e-ref-api.onrender.com"; 
         
-        // TABELADAKİ TÜM ÇEŞİTLER
-        const dondurmaCesitleri = [
-            "Eşref Usta Sadesi", "Sade", "Kakao", "Limon", "Çilek", "Karamel", 
-            "Kavun", "Aronia", "Şeftali", "Böğürtlen", "İncir", "Ceviz", 
-            "Yoğurtlu Meyveli", "Antep Fıstığı", "Vişne", "Oreo", "Karpuz", 
-            "Ballı Muz", "Ballı Badem", "Damla Sakızı", "Yeşil Elma", 
-            "Karadut", "Big Bubble", "Kivi", "Mango", "Orman Meyveli"
-        ];
+        const dondurmaCesitleri = ["Eşref Usta Sadesi", "Sade", "Kakao", "Limon", "Çilek", "Karamel", "Kavun", "Aronia", "Şeftali", "Böğürtlen", "İncir", "Ceviz", "Yoğurtlu Meyveli", "Antep Fıstığı", "Vişne", "Oreo", "Karpuz", "Ballı Muz", "Ballı Badem", "Damla Sakızı", "Yeşil Elma", "Karadut", "Big Bubble", "Kivi", "Mango", "Orman Meyveli"];
+        const oraletCesitleri = ["Kivi", "Nane Limon", "Karadut", "Muz", "Portakal", "Fındık Kakao"];
+        const sodaCesitleri = ["Limonlu", "Karpuzlu", "Guava", "Nar"];
 
         let menuData = [];
 
@@ -102,9 +165,14 @@
             const filtered = cat === 'Tümü' ? menuData : menuData.filter(i => i.kategori === cat);
             
             filtered.forEach(i => {
-                // Eğer ürün dondurma ise altına "Çeşitleri Gör" butonu ekle
                 const isDondurma = i.kategori === 'Dondurma';
-                const flavorBtn = isDondurma ? `<div class="flavor-link" onclick="openFlavors()">🍦 Çeşitleri Gör</div>` : '';
+                const isOralet = i.ad.toLowerCase().includes('oralet');
+                const isMeyveliSoda = i.ad.toLowerCase().includes('meyveli soda');
+                
+                let actionBtn = '';
+                if(isDondurma) actionBtn = `<div class="flavor-link" onclick="openFlavors('dondurma')">🍦 Çeşitleri Gör</div>`;
+                else if(isOralet) actionBtn = `<div class="flavor-link" onclick="openFlavors('oralet')">☕ Çeşitleri Gör</div>`;
+                else if(isMeyveliSoda) actionBtn = `<div class="flavor-link" onclick="openFlavors('soda')">🍹 Çeşitleri Gör</div>`;
 
                 area.innerHTML += `
                 <div class="card">
@@ -112,7 +180,7 @@
                     <div class="info">
                         <h3>${i.ad}</h3>
                         <small>${i.kategori}</small><br>
-                        ${flavorBtn}
+                        ${actionBtn}
                     </div>
                     <div class="price">${i.fiyat} ₺</div>
                 </div>`;
@@ -136,17 +204,28 @@
             });
         }
 
-        // ÇEŞİTLER KARTINI AÇ
-        function openFlavors() {
+        function openInfo() { document.getElementById('infoModal').style.display = 'flex'; }
+
+        function openFlavors(type) {
             const list = document.getElementById('flavorList');
+            const title = document.getElementById('flavorTitle');
             list.innerHTML = '';
-            dondurmaCesitleri.forEach(flavor => {
-                list.innerHTML += `<div class="flavor-item"><i class="fa-solid fa-ice-cream" style="color:var(--p)"></i> ${flavor}</div>`;
-            });
+            
+            if(type === 'dondurma') {
+                title.innerText = "Dondurma Çeşitleri";
+                dondurmaCesitleri.forEach(f => list.innerHTML += `<div class="grid-item">🍦 ${f}</div>`);
+            } else if(type === 'oralet') {
+                title.innerText = "Oralet Çeşitleri";
+                oraletCesitleri.forEach(f => list.innerHTML += `<div class="grid-item">☕ ${f}</div>`);
+            } else if(type === 'soda') {
+                title.innerText = "Meyveli Soda Çeşitleri";
+                sodaCesitleri.forEach(f => list.innerHTML += `<div class="grid-item">🍹 ${f}</div>`);
+            }
             document.getElementById('flavorModal').style.display = 'flex';
         }
 
-        function closeFlavors(e) {
+        function closeModals() {
+            document.getElementById('infoModal').style.display = 'none';
             document.getElementById('flavorModal').style.display = 'none';
         }
 
